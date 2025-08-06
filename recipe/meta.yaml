@@ -6,14 +6,14 @@ package:
   version: {{ version }}
 
 source:
-  url: https://github.com/linux-rdma/rdma-core/archive/v{{ version }}.tar.gz
+  url: https://github.com/linux-{{ name.split('-')[0] }}/{{ name }}/archive/refs/tags/v{{ version }}.tar.gz
   sha256: 08a554e0f95bb6869f9fbc2b1eb5521a85104dda9bf730db42b1a10d0b009e28
   patches:
     - 0001-Remove-assertions-on-longer-than-sockaddr_un.sun_pat.patch
 
 build:
   number: 0
-  skip: true  # [not linux]
+  skip: True  # [not linux]
   run_exports:
     - {{ pin_subpackage("rdma-core", max_pin=None) }}
 
@@ -29,22 +29,71 @@ requirements:
     - python
     - docutils
   host:
-    - libnl
-    - libsystemd
-    - libudev
+    - libnl 3.11
+    # https://github.com/linux-rdma/rdma-core/blob/master/CMakeLists.txt#L843-L848
+    # - libsystemd
+    # - libudev
 
 test:
   commands:
-    - test -f "${PREFIX}/bin/ibv_devices"
-    # Test `ibv_devices` when building natively
-    - ${PREFIX}/bin/ibv_devices            # [build_platform == target_platform]
+    # +++++ Binaries +++++
+    # 1. Diagnostic tools
+    - ${PREFIX}/bin/ib_acme --help
+    # 2. Benchmarking tools
+    - ${PREFIX}/bin/ibv_rc_pingpong --help || ${PREFIX}/bin/ibv_rc_pingpong -h
+    - ${PREFIX}/bin/ibv_ud_pingpong --help || ${PREFIX}/bin/ibv_ud_pingpong -h
+    - ${PREFIX}/bin/ibv_uc_pingpong --help || ${PREFIX}/bin/ibv_uc_pingpong -h
+    - ${PREFIX}/bin/ibv_srq_pingpong --help || ${PREFIX}/bin/ibv_srq_pingpong -h
+    - ${PREFIX}/bin/ibv_xsrq_pingpong --help || ${PREFIX}/bin/ibv_xsrq_pingpong -h
+    # 3. RDMA CM tools
+    - ${PREFIX}/bin/rdma_client --help || ${PREFIX}/bin/rdma_client -h
+    - ${PREFIX}/bin/rdma_server --help || ${PREFIX}/bin/rdma_server -h
+    - ${PREFIX}/bin/rdma_xclient --help || ${PREFIX}/bin/rdma_xclient -h
+    - ${PREFIX}/bin/rdma_xserver --help || ${PREFIX}/bin/rdma_xserver -h
+    - ${PREFIX}/bin/mckey --help || ${PREFIX}/bin/mckey -h
+    - ${PREFIX}/bin/ucmatose --help || ${PREFIX}/bin/ucmatose -h
+    - ${PREFIX}/bin/udaddy --help || ${PREFIX}/bin/udaddy -h
+    - ${PREFIX}/bin/rping --help || ${PREFIX}/bin/rping -h
+    # 4. Stream/copy tools
+    - ${PREFIX}/bin/rstream --help || ${PREFIX}/bin/rstream -h
+    - ${PREFIX}/bin/riostream --help || ${PREFIX}/bin/riostream -h
+    - ${PREFIX}/bin/rcopy --help || ${PREFIX}/bin/rcopy -h
+    # 5. Utilities
+    - ${PREFIX}/bin/ibv_asyncwatch --help || ${PREFIX}/bin/ibv_asyncwatch -h
+    - ${PREFIX}/bin/cmtime --help || ${PREFIX}/bin/cmtime -h
+    - ${PREFIX}/bin/udpong --help || ${PREFIX}/bin/udpong -h
+    # 6. Binary existence verification
+    - test -x ${PREFIX}/bin/ibv_devices
+    # +++++ LIBRARIES +++++
+    # 1. Core RDMA libraries
+    - test -f ${PREFIX}/lib/libibverbs.so*       # [linux]
+    - test -f ${PREFIX}/lib/librdmacm.so*        # [linux]
+    # symbolic links
+    - test -L ${PREFIX}/lib/libibverbs.so        # [linux]
+    - test -L ${PREFIX}/lib/librdmacm.so         # [linux]
+    # pkgconfig files
+    - test -f ${PREFIX}/lib/pkgconfig/libibverbs.pc
+    - test -f ${PREFIX}/lib/pkgconfig/librdmacm.pc
+    # 2. Essential management libraries
+    - test -f ${PREFIX}/lib/libibumad.so*        # [linux]
+    - test -f ${PREFIX}/lib/libibmad.so*         # [linux]
+    - test -f ${PREFIX}/lib/libibnetdisc.so*     # [linux]
+    # 3. Major vendor drivers
+    - test -f ${PREFIX}/lib/libibverbs/libmlx4-rdmav*.so    # [linux]
+    - test -f ${PREFIX}/lib/libibverbs/libmlx5-rdmav*.so    # [linux]
+    - test -f ${PREFIX}/lib/libibverbs/librxe-rdmav*.so     # [linux]
+    # 4. Cloud vendor drivers
+    - test -f ${PREFIX}/lib/libibverbs/libefa-rdmav*.so     # [linux]
 
 about:
   home: https://github.com/linux-rdma/rdma-core
+  summary: RDMA Core Userspace Libraries and Daemons
   license: Linux-OpenIB
   license_family: BSD
   license_file: LICENSE.txt
-  summary: RDMA Core Userspace Libraries and Daemons
+  description: |
+    RDMA Core Userspace Libraries and Daemons
+    This is the userspace components for the Linux Kernel's drivers/infiniband subsystem.
   doc_url: https://github.com/linux-rdma/rdma-core
   dev_url: https://github.com/linux-rdma/rdma-core
 
