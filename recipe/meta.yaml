@@ -42,7 +42,7 @@ test:
     # 1. Diagnostic tools
     - test -x ${PREFIX}/bin/ib_acme
     - test -x ${PREFIX}/bin/ibv_devices
-    - ${PREFIX}/bin/ibv_devices -V
+    # ${PREFIX}/bin/ibv_devices -v -> return an empty list of device+node GUID and finished command with 1. False positive.
     - test -x ${PREFIX}/bin/ibv_devinfo
     - test -x ${PREFIX}/bin/ibv_asyncwatch
     # 2. Benchmarking tools
@@ -82,13 +82,11 @@ test:
     - test -f ${PREFIX}/lib/libibumad.so*
     - test -f ${PREFIX}/lib/libibmad.so*
     - test -f ${PREFIX}/lib/libibnetdisc.so*
-    # 3. Plugin directory structure
-    - test -d ${PREFIX}/lib/libibverbs
-    # 4. Major vendor drivers
+    # 3. Major vendor drivers
     - test -f ${PREFIX}/lib/libibverbs/libmlx4-rdmav*.so
     - test -f ${PREFIX}/lib/libibverbs/libmlx5-rdmav*.so
     - test -f ${PREFIX}/lib/libibverbs/librxe-rdmav*.so
-    # 5. Cloud vendor drivers  
+    # 4. Cloud vendor drivers
     - test -f ${PREFIX}/lib/libibverbs/libefa-rdmav*.so
 
     # +++++ HEADERS +++++
