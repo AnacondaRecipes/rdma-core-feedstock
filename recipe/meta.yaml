@@ -76,15 +76,9 @@ test:
     - test -f ${PREFIX}/lib/libibnetdisc.so.5.1.58.0
     # 3. Major vendor drivers
     - test -f ${PREFIX}/lib/libhns.so.1.0.58.0
-    - test -f ${PREFIX}/lib/libibmad.so.5.5.58.0
-    - test -f ${PREFIX}/lib/libibnetdisc.so.5.1.58.0
-    - test -f ${PREFIX}/lib/libibumad.so.3.4.58.0
-    - test -f ${PREFIX}/lib/libibverbs
-    - test -f ${PREFIX}/lib/libibverbs.so.1.14.58.0
     - test -f ${PREFIX}/lib/libmana.so.1.0.58.0
     - test -f ${PREFIX}/lib/libmlx4.so.1.0.58.0
     - test -f ${PREFIX}/lib/libmlx5.so.1.25.58.0
-    - test -f ${PREFIX}/lib/librdmacm.so.1.3.58.0
     - test -f ${PREFIX}/lib/libibverbs/libbnxt_re-rdmav57.so
     - test -f ${PREFIX}/lib/libibverbs/libcxgb4-rdmav57.so
     - test -f ${PREFIX}/lib/libibverbs/liberdma-rdmav57.so
@@ -96,7 +90,6 @@ test:
     - test -f ${PREFIX}/lib/libibverbs/libqedr-rdmav57.so
     - test -f ${PREFIX}/lib/libibverbs/libsiw-rdmav57.so
     - test -f ${PREFIX}/lib/libibverbs/libvmw_pvrdma-rdmav57.so
-    - test -f ${PREFIX}/lib/libibverbs/librxe-rdmav*.so
     # 4. Cloud vendor drivers
     - test -f ${PREFIX}/lib/libefa.so.1.3.58.0
 
