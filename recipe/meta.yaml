@@ -14,6 +14,8 @@ source:
 build:
   number: 0
   skip: True  # [not linux]
+  ignore_run_exports:
+    - libstdcxx-ng
   run_exports:
     - {{ pin_subpackage("rdma-core", max_pin=None) }}
 
@@ -40,9 +42,9 @@ test:
     # 1. Diagnostic tools
     - test -x ${PREFIX}/bin/ib_acme
     - test -x ${PREFIX}/bin/ibv_devices
+    - ${PREFIX}/bin/ibv_devices -V
     - test -x ${PREFIX}/bin/ibv_devinfo
     - test -x ${PREFIX}/bin/ibv_asyncwatch
-    - test -x ${PREFIX}/bin/ucx_info
     # 2. Benchmarking tools
     - test -x ${PREFIX}/bin/ibv_rc_pingpong
     - test -x ${PREFIX}/bin/ibv_ud_pingpong
@@ -88,7 +90,7 @@ test:
     - test -f ${PREFIX}/lib/libibverbs/librxe-rdmav*.so
     # 5. Cloud vendor drivers  
     - test -f ${PREFIX}/lib/libibverbs/libefa-rdmav*.so
-    
+
     # +++++ HEADERS +++++
     - test -f ${PREFIX}/include/infiniband/verbs.h
     - test -f ${PREFIX}/include/rdma/rdma_cma.h
