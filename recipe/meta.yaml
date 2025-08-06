@@ -36,54 +36,62 @@ requirements:
 
 test:
   commands:
-    # +++++ Binaries +++++
+    # +++++ BINARIES +++++
     # 1. Diagnostic tools
-    - ${PREFIX}/bin/ib_acme --help
-    # 2. Benchmarking tools
-    - ${PREFIX}/bin/ibv_rc_pingpong --help || ${PREFIX}/bin/ibv_rc_pingpong -h
-    - ${PREFIX}/bin/ibv_ud_pingpong --help || ${PREFIX}/bin/ibv_ud_pingpong -h
-    - ${PREFIX}/bin/ibv_uc_pingpong --help || ${PREFIX}/bin/ibv_uc_pingpong -h
-    - ${PREFIX}/bin/ibv_srq_pingpong --help || ${PREFIX}/bin/ibv_srq_pingpong -h
-    - ${PREFIX}/bin/ibv_xsrq_pingpong --help || ${PREFIX}/bin/ibv_xsrq_pingpong -h
-    # 3. RDMA CM tools
-    - ${PREFIX}/bin/rdma_client --help || ${PREFIX}/bin/rdma_client -h
-    - ${PREFIX}/bin/rdma_server --help || ${PREFIX}/bin/rdma_server -h
-    - ${PREFIX}/bin/rdma_xclient --help || ${PREFIX}/bin/rdma_xclient -h
-    - ${PREFIX}/bin/rdma_xserver --help || ${PREFIX}/bin/rdma_xserver -h
-    - ${PREFIX}/bin/mckey --help || ${PREFIX}/bin/mckey -h
-    - ${PREFIX}/bin/ucmatose --help || ${PREFIX}/bin/ucmatose -h
-    - ${PREFIX}/bin/udaddy --help || ${PREFIX}/bin/udaddy -h
-    - ${PREFIX}/bin/rping --help || ${PREFIX}/bin/rping -h
-    # 4. Stream/copy tools
-    - ${PREFIX}/bin/rstream --help || ${PREFIX}/bin/rstream -h
-    - ${PREFIX}/bin/riostream --help || ${PREFIX}/bin/riostream -h
-    - ${PREFIX}/bin/rcopy --help || ${PREFIX}/bin/rcopy -h
-    # 5. Utilities
-    - ${PREFIX}/bin/ibv_asyncwatch --help || ${PREFIX}/bin/ibv_asyncwatch -h
-    - ${PREFIX}/bin/cmtime --help || ${PREFIX}/bin/cmtime -h
-    - ${PREFIX}/bin/udpong --help || ${PREFIX}/bin/udpong -h
-    # 6. Binary existence verification
+    - test -x ${PREFIX}/bin/ib_acme
     - test -x ${PREFIX}/bin/ibv_devices
+    - test -x ${PREFIX}/bin/ibv_devinfo
+    - test -x ${PREFIX}/bin/ibv_asyncwatch
+    - test -x ${PREFIX}/bin/ucx_info
+    # 2. Benchmarking tools
+    - test -x ${PREFIX}/bin/ibv_rc_pingpong
+    - test -x ${PREFIX}/bin/ibv_ud_pingpong
+    - test -x ${PREFIX}/bin/ibv_uc_pingpong
+    - test -x ${PREFIX}/bin/ibv_srq_pingpong
+    - test -x ${PREFIX}/bin/ibv_xsrq_pingpong
+    # 3. RDMA CM tools
+    - test -x ${PREFIX}/bin/rdma_client
+    - test -x ${PREFIX}/bin/rdma_server
+    - test -x ${PREFIX}/bin/rdma_xclient
+    - test -x ${PREFIX}/bin/rdma_xserver
+    - test -x ${PREFIX}/bin/mckey
+    - test -x ${PREFIX}/bin/ucmatose
+    - test -x ${PREFIX}/bin/udaddy
+    - test -x ${PREFIX}/bin/rping
+    # 4. Stream/copy tools
+    - test -x ${PREFIX}/bin/rstream
+    - test -x ${PREFIX}/bin/riostream
+    - test -x ${PREFIX}/bin/rcopy
+    # 5. Utilities
+    - test -x ${PREFIX}/bin/cmtime
+    - test -x ${PREFIX}/bin/udpong
+
     # +++++ LIBRARIES +++++
     # 1. Core RDMA libraries
-    - test -f ${PREFIX}/lib/libibverbs.so*       # [linux]
-    - test -f ${PREFIX}/lib/librdmacm.so*        # [linux]
-    # symbolic links
-    - test -L ${PREFIX}/lib/libibverbs.so        # [linux]
-    - test -L ${PREFIX}/lib/librdmacm.so         # [linux]
+    - test -f ${PREFIX}/lib/libibverbs.so*
+    - test -f ${PREFIX}/lib/librdmacm.so*
+    # Symbolic links
+    - test -L ${PREFIX}/lib/libibverbs.so
+    - test -L ${PREFIX}/lib/librdmacm.so
     # pkgconfig files
     - test -f ${PREFIX}/lib/pkgconfig/libibverbs.pc
     - test -f ${PREFIX}/lib/pkgconfig/librdmacm.pc
     # 2. Essential management libraries
-    - test -f ${PREFIX}/lib/libibumad.so*        # [linux]
-    - test -f ${PREFIX}/lib/libibmad.so*         # [linux]
-    - test -f ${PREFIX}/lib/libibnetdisc.so*     # [linux]
-    # 3. Major vendor drivers
-    - test -f ${PREFIX}/lib/libibverbs/libmlx4-rdmav*.so    # [linux]
-    - test -f ${PREFIX}/lib/libibverbs/libmlx5-rdmav*.so    # [linux]
-    - test -f ${PREFIX}/lib/libibverbs/librxe-rdmav*.so     # [linux]
-    # 4. Cloud vendor drivers
-    - test -f ${PREFIX}/lib/libibverbs/libefa-rdmav*.so     # [linux]
+    - test -f ${PREFIX}/lib/libibumad.so*
+    - test -f ${PREFIX}/lib/libibmad.so*
+    - test -f ${PREFIX}/lib/libibnetdisc.so*
+    # 3. Plugin directory structure
+    - test -d ${PREFIX}/lib/libibverbs
+    # 4. Major vendor drivers
+    - test -f ${PREFIX}/lib/libibverbs/libmlx4-rdmav*.so
+    - test -f ${PREFIX}/lib/libibverbs/libmlx5-rdmav*.so
+    - test -f ${PREFIX}/lib/libibverbs/librxe-rdmav*.so
+    # 5. Cloud vendor drivers  
+    - test -f ${PREFIX}/lib/libibverbs/libefa-rdmav*.so
+    
+    # +++++ HEADERS +++++
+    - test -f ${PREFIX}/include/infiniband/verbs.h
+    - test -f ${PREFIX}/include/rdma/rdma_cma.h
 
 about:
   home: https://github.com/linux-rdma/rdma-core
