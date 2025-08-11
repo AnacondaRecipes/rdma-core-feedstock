@@ -6,14 +6,14 @@ package:
   version: {{ version }}
 
 source:
-  url: https://github.com/linux-rdma/rdma-core/archive/v{{ version }}.tar.gz
+  url: https://github.com/linux-{{ name.split('-')[0] }}/{{ name }}/archive/refs/tags/v{{ version }}.tar.gz
   sha256: 08a554e0f95bb6869f9fbc2b1eb5521a85104dda9bf730db42b1a10d0b009e28
   patches:
     - 0001-Remove-assertions-on-longer-than-sockaddr_un.sun_pat.patch
 
 build:
   number: 0
-  skip: true  # [not linux]
+  skip: True  # [not linux]
   run_exports:
     - {{ pin_subpackage("rdma-core", max_pin=None) }}
 
@@ -29,22 +29,79 @@ requirements:
     - python
     - docutils
   host:
-    - libnl
-    - libsystemd
-    - libudev
+    - libnl 3.11
+    # https://github.com/linux-rdma/rdma-core/blob/master/CMakeLists.txt#L843-L848
+    # - libsystemd
+    # - libudev
 
 test:
   commands:
-    - test -f "${PREFIX}/bin/ibv_devices"
-    # Test `ibv_devices` when building natively
-    - ${PREFIX}/bin/ibv_devices            # [build_platform == target_platform]
+    # +++++ BINARIES +++++
+    # 1. Diagnostic tools
+    - test -x ${PREFIX}/bin/ib_acme
+    - test -x ${PREFIX}/bin/ibv_devices
+    # ${PREFIX}/bin/ibv_devices -v -> return an empty list of device+node GUID and finished command with 1. False positive.
+    - test -x ${PREFIX}/bin/ibv_devinfo
+    - test -x ${PREFIX}/bin/ibv_asyncwatch
+    # 2. Benchmarking tools
+    - test -x ${PREFIX}/bin/ibv_rc_pingpong
+    - test -x ${PREFIX}/bin/ibv_ud_pingpong
+    - test -x ${PREFIX}/bin/ibv_uc_pingpong
+    - test -x ${PREFIX}/bin/ibv_srq_pingpong
+    - test -x ${PREFIX}/bin/ibv_xsrq_pingpong
+    # 3. RDMA CM tools
+    - test -x ${PREFIX}/bin/rdma_client
+    - test -x ${PREFIX}/bin/rdma_server
+    - test -x ${PREFIX}/bin/rdma_xclient
+    - test -x ${PREFIX}/bin/rdma_xserver
+    - test -x ${PREFIX}/bin/mckey
+    - test -x ${PREFIX}/bin/ucmatose
+    - test -x ${PREFIX}/bin/udaddy
+    - test -x ${PREFIX}/bin/rping
+    # 4. Stream/copy tools
+    - test -x ${PREFIX}/bin/rstream
+    - test -x ${PREFIX}/bin/riostream
+    - test -x ${PREFIX}/bin/rcopy
+    # 5. Utilities
+    - test -x ${PREFIX}/bin/cmtime
+    - test -x ${PREFIX}/bin/udpong
+
+    # +++++ LIBRARIES +++++
+    # 1. Core RDMA libraries
+    - test -f ${PREFIX}/lib/libibverbs.so.1.14.58.0
+    - test -f ${PREFIX}/lib/librdmacm.so.1.3.58.0
+    # 2. Essential management libraries
+    - test -f ${PREFIX}/lib/libibumad.so.3.4.58.0
+    - test -f ${PREFIX}/lib/libibmad.so.5.5.58.0
+    - test -f ${PREFIX}/lib/libibnetdisc.so.5.1.58.0
+    # 3. Major vendor drivers
+    - test -f ${PREFIX}/lib/libhns.so.1.0.58.0
+    - test -f ${PREFIX}/lib/libmana.so.1.0.58.0
+    - test -f ${PREFIX}/lib/libmlx4.so.1.0.58.0
+    - test -f ${PREFIX}/lib/libmlx5.so.1.25.58.0
+    - test -f ${PREFIX}/lib/libibverbs/libbnxt_re-rdmav57.so
+    - test -f ${PREFIX}/lib/libibverbs/libcxgb4-rdmav57.so
+    - test -f ${PREFIX}/lib/libibverbs/liberdma-rdmav57.so
+    - test -f ${PREFIX}/lib/libibverbs/libhfi1verbs-rdmav57.so
+    - test -f ${PREFIX}/lib/libibverbs/libipathverbs-rdmav57.so
+    - test -f ${PREFIX}/lib/libibverbs/libirdma-rdmav57.so
+    - test -f ${PREFIX}/lib/libibverbs/libmthca-rdmav57.so
+    - test -f ${PREFIX}/lib/libibverbs/libocrdma-rdmav57.so
+    - test -f ${PREFIX}/lib/libibverbs/libqedr-rdmav57.so
+    - test -f ${PREFIX}/lib/libibverbs/libsiw-rdmav57.so
+    - test -f ${PREFIX}/lib/libibverbs/libvmw_pvrdma-rdmav57.so
+    # 4. Cloud vendor drivers
+    - test -f ${PREFIX}/lib/libefa.so.1.3.58.0
 
 about:
   home: https://github.com/linux-rdma/rdma-core
+  summary: RDMA Core Userspace Libraries and Daemons
   license: Linux-OpenIB
   license_family: BSD
   license_file: LICENSE.txt
-  summary: RDMA Core Userspace Libraries and Daemons
+  description: |
+    RDMA Core Userspace Libraries and Daemons
+    This is the userspace components for the Linux Kernel's drivers/infiniband subsystem.
   doc_url: https://github.com/linux-rdma/rdma-core
   dev_url: https://github.com/linux-rdma/rdma-core
 
