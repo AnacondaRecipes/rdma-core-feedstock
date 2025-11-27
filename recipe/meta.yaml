@@ -68,37 +68,31 @@ test:
 
     # +++++ LIBRARIES +++++
     # 1. Core RDMA libraries
-    - test -f ${PREFIX}/lib/libibverbs.so.1.15.60.0
-    - test -f ${PREFIX}/lib/librdmacm.so.1.4.60.0
+    - test -f ${PREFIX}/lib/libibverbs.so.1
+    - test -f ${PREFIX}/lib/librdmacm.so.1
     # 2. Essential management libraries
-    - test -f ${PREFIX}/lib/libibumad.so.3.4.60.0
-    - test -f ${PREFIX}/lib/libibmad.so.5.5.60.0
-    - test -f ${PREFIX}/lib/libibnetdisc.so.5.1.60.0
+    - test -f ${PREFIX}/lib/libibumad.so.3
+    - test -f ${PREFIX}/lib/libibmad.so.5
+    - test -f ${PREFIX}/lib/libibnetdisc.so.5
     # 3. Major vendor drivers
-    - test -f ${PREFIX}/lib/libhns.so.1.0.60.0
-    - test -f ${PREFIX}/lib/libmana.so.1.0.60.0
-    - test -f ${PREFIX}/lib/libmlx4.so.1.0.60.0
-    - test -f ${PREFIX}/lib/libmlx5.so.1.25.60.0
-    - test -f ${PREFIX}/lib/libibverbs/libbnxt_re-rdmav59.so
-    - test -f ${PREFIX}/lib/libibverbs/libcxgb4-rdmav59.so
-    - test -f ${PREFIX}/lib/libibverbs/liberdma-rdmav59.so
-    - test -f ${PREFIX}/lib/libibverbs/libhfi1verbs-rdmav59.so
-    - test -f ${PREFIX}/lib/libibverbs/libipathverbs-rdmav59.so
-    - test -f ${PREFIX}/lib/libibverbs/libirdma-rdmav59.so
-    - test -f ${PREFIX}/lib/libibverbs/libmthca-rdmav59.so
-    - test -f ${PREFIX}/lib/libibverbs/libocrdma-rdmav59.so
-    - test -f ${PREFIX}/lib/libibverbs/libqedr-rdmav59.so
-    - test -f ${PREFIX}/lib/libibverbs/libsiw-rdmav59.so
-    - test -f ${PREFIX}/lib/libibverbs/libvmw_pvrdma-rdmav59.so
+    - test -f ${PREFIX}/lib/libhns.so.1
+    - test -f ${PREFIX}/lib/libmana.so.1
+    - test -f ${PREFIX}/lib/libmlx4.so.1
+    - test -f ${PREFIX}/lib/libmlx5.so.1
     # 4. Cloud vendor drivers
-    - test -f ${PREFIX}/lib/libefa.so.1.4.60.0
+    - test -f ${PREFIX}/lib/libefa.so.1
 
 about:
   home: https://github.com/linux-rdma/rdma-core
   summary: RDMA Core Userspace Libraries and Daemons
-  license: Linux-OpenIB
-  license_family: BSD
-  license_file: LICENSE.txt
+  # https://github.com/linux-rdma/rdma-core/blob/v60.0/COPYING.md
+  license: GPL-2.0 OR OpenIB-BSD-MIT
+  license_family: Other
+  license_file:
+      - COPYING.md
+      - COPYING.BSD_FB
+      - COPYING.BSD_MIT
+      - COPYING.GPL2
   description: |
     RDMA Core Userspace Libraries and Daemons
     This is the userspace components for the Linux Kernel's drivers/infiniband subsystem.
