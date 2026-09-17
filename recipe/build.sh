@@ -5,8 +5,7 @@ export CMAKE_CONFIG="Release"
 mkdir "build_${CMAKE_CONFIG}"
 pushd "build_${CMAKE_CONFIG}"
 
-# 64.0 installs rdma-sysusers.conf into SYSUSERS_DIR; default is /usr/lib/sysusers.d.
-# 64.0 installs rdma-sysusers.conf into SYSUSERS_DIR; default is /usr/lib/sysusers.d.
+# 64.0+ installs rdma-sysusers.conf into SYSUSERS_DIR; default is /usr/lib/sysusers.d.
 cmake ${CMAKE_ARGS} \
       -G Ninja \
       -D CMAKE_BUILD_TYPE:STRING="${CMAKE_CONFIG}" \
