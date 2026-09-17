@@ -29,7 +29,7 @@ requirements:
     - python
     - docutils
   host:
-    - libnl 3.11
+    - libnl {{ libnl }}
     # https://github.com/linux-rdma/rdma-core/blob/master/CMakeLists.txt#L843-L848
     # - libsystemd
     # - libudev
